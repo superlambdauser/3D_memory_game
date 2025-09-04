@@ -11,6 +11,7 @@ public class GameInitializer : MonoBehaviour
     [SerializeField] private CardBehaviour cardPrefab;
     [SerializeField] private Color[] colors;
     [SerializeField] private CardsManager cardsManager;
+    [SerializeField] private int maxCardsPerColor;
     private List<CardBehaviour> deck = new();
 
     private void Start() // private because no inheritance needed
@@ -64,7 +65,7 @@ public class GameInitializer : MonoBehaviour
 
     private void ObjectsInitialization()
     {
-        cardsManager.Initialize(deck, colors);
+        cardsManager.Initialize(deck, colors, maxCardsPerColor);
     }
 }
 

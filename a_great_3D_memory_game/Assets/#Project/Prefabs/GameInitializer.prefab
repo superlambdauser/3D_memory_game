@@ -53,3 +53,4 @@ MonoBehaviour:
   - {r: 1, g: 0.58835566, b: 0, a: 0}
   - {r: 1, g: 0.9481132, b: 0.9481132, a: 0}
   cardsManager: {fileID: 705780906193852819, guid: ef20a687c9b4b7e4bbc5c494f244658e, type: 3}
+  maxCardsPerColor: 2
