@@ -121,3 +121,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea2770bf84b2b3b478398ab6254b105c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scaleOnFocus: {x: 1.5, y: 1.5, z: 1.5}
