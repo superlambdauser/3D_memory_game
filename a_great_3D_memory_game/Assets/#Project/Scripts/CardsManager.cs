@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class CardsManager : MonoBehaviour
 {
@@ -7,15 +8,25 @@ public class CardsManager : MonoBehaviour
     private Color[] colors;
     private int maxCardsPerColor;
     private CardBehaviour memoCard = null;
+    private int cardsCounter = 0;
 
-    [SerializeField] float delayBeforeFaceDown;
+    [SerializeField] private float sceneLoaderDelay = 1f;
+    [SerializeField] private float delayBeforeFaceDown = 1f;
+
+
+    private void VictorySceneManager()
+    {
+        SceneManager.LoadScene("VictoryScene");
+    }
 
     public void Initialize(List<CardBehaviour> deck, Color[] colors, int maxCardsPerColor)
     {
         this.colors = colors;
         this.deck = deck;
         this.maxCardsPerColor = maxCardsPerColor;
+
         memoCard = null;
+        cardsCounter = 0;
 
         AssignColors();
     }
@@ -53,21 +64,28 @@ public class CardsManager : MonoBehaviour
 
     public void CardIsClicked(CardBehaviour card)
     {
+        if (card.IsFaceUp) return; // 
+
         card.FaceUp();
 
         if (memoCard != null) // In Unity, not possible to use "is not null" rather than != because != also verifies objects BEING destroyed (but not yet destroyed)
         {
-            if (card.IndexColor == memoCard.IndexColor)
+            if (card.IndexColor != memoCard.IndexColor)
             {
-                Debug.Log("GG");
-            }
-            else
-            {
-                Debug.Log("raté grosse noob");
                 memoCard.FaceDown(delayBeforeFaceDown);
                 card.FaceDown(delayBeforeFaceDown);
             }
+            else
+            {
+                cardsCounter++;
+                Debug.Log($"Found pairs : {cardsCounter}");
 
+                if (cardsCounter >= deck.Count/2) // /!\ not working with my maxCardsPerColor variable rn !! find the formula !
+                {
+                    Debug.Log("VICTORY !");
+                    Invoke("VictorySceneManager", sceneLoaderDelay);
+                }
+            }
             memoCard = null;
         }
         else

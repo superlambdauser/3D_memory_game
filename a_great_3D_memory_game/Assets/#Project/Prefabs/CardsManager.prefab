@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a294e7172f33b4a885808d221cb785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayBeforeFaceDown: 1

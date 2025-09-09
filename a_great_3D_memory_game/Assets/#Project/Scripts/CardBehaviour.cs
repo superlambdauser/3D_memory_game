@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))] // Safety for use : object HAS TO have a renderer in order to apply a CardBehaviour script to it
@@ -42,6 +41,7 @@ public class CardBehaviour : MonoBehaviour
     private IEnumerator LerpChangeColor(Color color, float delay = 0f)
     {
         yield return new WaitForSeconds(delay);
+
         float chrono = 0f;
         Color startingColor  = GetComponent<Renderer>().material.color;
 
@@ -81,7 +81,7 @@ public class CardBehaviour : MonoBehaviour
 
     public void FaceDown(float delay = 0f)
     {
-        StartCoroutine(LerpChangeColor(baseColor));
+        StartCoroutine(LerpChangeColor(baseColor, delay));
         IsFaceUp = false;
     }
 
