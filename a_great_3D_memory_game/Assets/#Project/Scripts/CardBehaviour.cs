@@ -22,10 +22,6 @@ public class CardBehaviour : MonoBehaviour
     {
         manager.CardIsClicked(this);
 
-        // if (isFaceUp == false)
-        // {
-        //     FaceDown();
-        // }
     }
     private void OnMouseEnter()
     {

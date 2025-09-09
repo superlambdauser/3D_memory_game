@@ -10,20 +10,16 @@ public class CardsManager : MonoBehaviour
     private CardBehaviour memoCard = null;
     private int cardsCounter = 0;
 
-    [SerializeField] private float sceneLoaderDelay = 1f;
+    [SerializeField] SceneLoadingManager victoryManager;
     [SerializeField] private float delayBeforeFaceDown = 1f;
 
 
-    private void VictorySceneManager()
-    {
-        SceneManager.LoadScene("VictoryScene");
-    }
-
-    public void Initialize(List<CardBehaviour> deck, Color[] colors, int maxCardsPerColor)
+    public void Initialize(List<CardBehaviour> deck, Color[] colors, int maxCardsPerColor, SceneLoadingManager victoryManager)
     {
         this.colors = colors;
         this.deck = deck;
         this.maxCardsPerColor = maxCardsPerColor;
+        this.victoryManager = victoryManager;
 
         memoCard = null;
         cardsCounter = 0;
@@ -83,7 +79,7 @@ public class CardsManager : MonoBehaviour
                 if (cardsCounter >= deck.Count/2) // /!\ not working with my maxCardsPerColor variable rn !! find the formula !
                 {
                     Debug.Log("VICTORY !");
-                    Invoke("VictorySceneManager", sceneLoaderDelay);
+                    victoryManager.Load();
                 }
             }
             memoCard = null;

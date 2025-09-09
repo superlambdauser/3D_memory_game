@@ -1,4 +1,4 @@
-
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +8,16 @@ public class GameInitializer : MonoBehaviour
     [SerializeField] private float gapBetweenCards = 0.5f;
     [SerializeField] private int columns = 2;
     [SerializeField] private int rows = 3;
+
     [SerializeField] private CardBehaviour cardPrefab;
     [SerializeField] private Color[] colors;
     [SerializeField] private CardsManager cardsManager;
     [SerializeField] private int maxCardsPerColor;
+
+    [SerializeField] private SceneLoadingManager sceneLoadingManager;
+    [SerializeField] private string scene;
+    [SerializeField] private float loadingDelay = 1f;
+
     private List<CardBehaviour> deck = new();
 
     private void Start() // private because no inheritance needed
@@ -38,10 +44,16 @@ public class GameInitializer : MonoBehaviour
         return cardClone;
     }
 
-    private void CardManagerInstantiation()
+    private void ObjectsInstantiation()
     {
+        sceneLoadingManager = Instantiate(sceneLoadingManager);
         cardsManager = Instantiate(cardsManager);
         // Reaffectation of cardManarger to *itself* allows the Game Initializer to point at the scene instance of the cardManager and not the prefab.
+    }
+    private void ObjectsInitialization()
+    {
+        sceneLoadingManager.Initialize(scene, loadingDelay);
+        cardsManager.Initialize(deck, colors, maxCardsPerColor, sceneLoadingManager);
     }
 
     private void GenerateBoard()
@@ -59,13 +71,8 @@ public class GameInitializer : MonoBehaviour
                 deck.Add(GenerateCard(position));
             }
 
-            CardManagerInstantiation();
+            ObjectsInstantiation();
         }
-    }
-
-    private void ObjectsInitialization()
-    {
-        cardsManager.Initialize(deck, colors, maxCardsPerColor);
     }
 }
 
