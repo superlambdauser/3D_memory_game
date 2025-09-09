@@ -8,6 +8,8 @@ public class CardsManager : MonoBehaviour
     private int maxCardsPerColor;
     private CardBehaviour memoCard = null;
 
+    [SerializeField] float delayBeforeFaceDown;
+
     public void Initialize(List<CardBehaviour> deck, Color[] colors, int maxCardsPerColor)
     {
         this.colors = colors;
@@ -62,8 +64,8 @@ public class CardsManager : MonoBehaviour
             else
             {
                 Debug.Log("raté grosse noob");
-                memoCard.FaceDown(1f);
-                card.FaceDown(1f);
+                memoCard.FaceDown(delayBeforeFaceDown);
+                card.FaceDown(delayBeforeFaceDown);
             }
 
             memoCard = null;
