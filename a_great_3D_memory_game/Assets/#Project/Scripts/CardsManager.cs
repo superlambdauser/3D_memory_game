@@ -3,54 +3,75 @@ using System.Collections.Generic;
 
 public class CardsManager : MonoBehaviour
 {
-    List<CardBehaviour> deck;
-    Color[] colors;
-    int maxCardsPerColor;
-    List<Color> cardsPerColor;
+    private List<CardBehaviour> deck;
+    private Color[] colors;
+    private int maxCardsPerColor;
+    private CardBehaviour memoCard = null;
 
     public void Initialize(List<CardBehaviour> deck, Color[] colors, int maxCardsPerColor)
     {
         this.colors = colors;
         this.deck = deck;
         this.maxCardsPerColor = maxCardsPerColor;
+        memoCard = null;
+
         AssignColors();
     }
 
     public void AssignColors()
     {
-        int rndColorIndex;
+        int colorIndex;
+        int cardIndex;
 
-        for (int i = 0; i < deck.Count; i++)
+        List<int> colorsAlreadyPicked = new(); // List of indexes
+        List<CardBehaviour> discard = new(deck); // Creates a clone of ou deck (since it is passed as an argument.) 
+        //  /!\ It takes more instantiations than interations which is a good choice in an Initialize() but maybe not in an Updat() function.
+
+        for (int _ = 0; _ < deck.Count / maxCardsPerColor; _++)
         {
-            rndColorIndex = Random.Range(0, colors.Length);
-            Color randomColor = colors[rndColorIndex];
+            colorIndex = Random.Range(0, colors.Length); // .Length car array
+            int c = 0;
 
-            int colorCounter = 0;
-
-            if (cardsPerColor != null)
+            while (colorsAlreadyPicked.Contains(colorIndex) && c++ < 100)
             {
-                for (int j=0; j < cardsPerColor.Count; j++)
-                {
-                    if (cardsPerColor[j] == randomColor)
-                    {
-                        colorCounter += 1;
-
-                        if (colorCounter >= maxCardsPerColor)
-                        {
-                            i -= 1;
-                            rndColorIndex = Random.Range(0, colors.Length);
-                            randomColor = colors[rndColorIndex];
-                            colorCounter = 0;
-                        }
-                        else
-                        {
-                            cardsPerColor.Add(randomColor);
-                        }
-                    }
-                }
+                colorIndex = Random.Range(0, colors.Length);
             }
 
-            deck[i].Initialize(randomColor, i, this);
+            colorsAlreadyPicked.Add(colorIndex);
+
+            for (int __ = 0; __ < maxCardsPerColor; __++) //
+            {
+                cardIndex = Random.Range(0, discard.Count);
+                discard[cardIndex].Initialize(colors[colorIndex], colorIndex, this);
+                discard.RemoveAt(cardIndex); // RemoveAt() = Pop() in python        
+            }
+
         }
     }
+
+    public void CardIsClicked(CardBehaviour card)
+    {
+        card.FaceUp();
+
+        if (memoCard != null) // In Unity, not possible to use "is not null" rather than != because != also verifies objects BEING destroyed (but not yet destroyed)
+        {
+            if (card.IndexColor == memoCard.IndexColor)
+            {
+                Debug.Log("GG");
+            }
+            else
+            {
+                Debug.Log("raté grosse noob");
+                memoCard.FaceDown(1f);
+                card.FaceDown(1f);
+            }
+
+            memoCard = null;
+        }
+        else
+        {
+            memoCard = card;
+        }
+    }
+
 }
